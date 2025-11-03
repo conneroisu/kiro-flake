@@ -17,13 +17,21 @@ If you have Nix flakes enabled (Nix 2.4+), you can use the modern flake commands
 #### Try without installing
 
 ```bash
+# Run the latest version
 nix run github:conneroisu/kiro-flake
+
+# Or pin to a specific commit for reproducibility
+nix run github:conneroisu/kiro-flake/COMMIT_HASH
 ```
 
 #### Install to your profile
 
 ```bash
+# Install the latest version
 nix profile install github:conneroisu/kiro-flake
+
+# Or pin to a specific commit for reproducibility
+nix profile install github:conneroisu/kiro-flake/COMMIT_HASH
 ```
 
 #### Add to NixOS configuration
@@ -79,6 +87,19 @@ In your home-manager configuration:
 }
 ```
 
+### Pinning to Specific Versions
+
+For reproducible builds, it's recommended to pin to specific commits:
+
+1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full commit hash
+
+2. **For flakes**: Use `github:conneroisu/kiro-flake/COMMIT_HASH`
+
+3. **For traditional Nix with sha256**: Calculate the hash:
+   ```bash
+   nix-prefetch-url --unpack https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz
+   ```
+
 ### Without Flakes (Traditional Nix)
 
 If you don't have flakes enabled or prefer the traditional Nix approach:
@@ -86,15 +107,21 @@ If you don't have flakes enabled or prefer the traditional Nix approach:
 #### Using nix-env
 
 ```bash
-# Install directly from GitHub
+# Install directly from GitHub (latest)
 nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/main.tar.gz
+
+# Or pin to a specific commit for reproducibility
+nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz
 ```
 
 #### Using nix-shell (temporary environment)
 
 ```bash
-# Enter a shell with kiro-desktop available
+# Enter a shell with kiro-desktop available (latest)
 nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/main.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
+
+# Or pin to a specific commit for reproducibility
+nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 ```
 
 #### Add to NixOS configuration (channels)
@@ -105,8 +132,11 @@ In your `/etc/nixos/configuration.nix`:
 { config, pkgs, ... }:
 
 let
+  # Pin to a specific commit for reproducibility
   kiro-flake = import (builtins.fetchTarball {
-    url = "https://github.com/conneroisu/kiro-flake/archive/main.tar.gz";
+    url = "https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz";
+    # Add sha256 hash for integrity verification (get with: nix-prefetch-url --unpack <url>)
+    sha256 = "0000000000000000000000000000000000000000000000000000";
   });
 in
 {
