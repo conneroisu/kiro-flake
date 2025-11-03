@@ -21,7 +21,7 @@ If you have Nix flakes enabled (Nix 2.4+), you can use the modern flake commands
 nix run github:conneroisu/kiro-flake
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix run github:conneroisu/kiro-flake/abc123def456...
+nix run github:conneroisu/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
 ```
 
 #### Install to your profile
@@ -31,7 +31,7 @@ nix run github:conneroisu/kiro-flake/abc123def456...
 nix profile install github:conneroisu/kiro-flake
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix profile install github:conneroisu/kiro-flake/abc123def456...
+nix profile install github:conneroisu/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
 ```
 
 #### Add to NixOS configuration
@@ -91,7 +91,7 @@ In your home-manager configuration:
 
 For reproducible builds, it's recommended to pin to specific commits:
 
-1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full 40-character commit hash (e.g., `abc123def456...`)
+1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full 40-character commit hash (e.g., `a1b2c3d4e5f6789012345678901234567890abcd`)
 
 2. **For flakes**: Use `github:conneroisu/kiro-flake/FULL_COMMIT_HASH`
 
@@ -111,7 +111,7 @@ If you don't have flakes enabled or prefer the traditional Nix approach:
 nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/main.tar.gz
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/abc123def456.tar.gz
+nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz
 ```
 
 #### Using nix-shell (temporary environment)
@@ -121,7 +121,7 @@ nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/
 nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/main.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/abc123def456.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
+nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 ```
 
 #### Add to NixOS configuration (channels)
@@ -134,9 +134,9 @@ In your `/etc/nixos/configuration.nix`:
 let
   # Pin to a specific commit for reproducibility
   kiro-flake = import (builtins.fetchTarball {
-    url = "https://github.com/conneroisu/kiro-flake/archive/FULL_COMMIT_HASH.tar.gz";
+    url = "https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz";
     # Replace with actual sha256 hash (get with: nix-prefetch-url --unpack <url>)
-    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    sha256 = "sha256-AAAA...";  # Placeholder - replace with actual hash
   });
 in
 {
