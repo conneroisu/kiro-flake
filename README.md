@@ -20,8 +20,8 @@ If you have Nix flakes enabled (Nix 2.4+), you can use the modern flake commands
 # Run the latest version
 nix run github:conneroisu/kiro-flake
 
-# Or pin to a specific commit for reproducibility
-nix run github:conneroisu/kiro-flake/COMMIT_HASH
+# Or pin to a specific commit for reproducibility (use full 40-character commit hash)
+nix run github:conneroisu/kiro-flake/abc123def456...
 ```
 
 #### Install to your profile
@@ -30,8 +30,8 @@ nix run github:conneroisu/kiro-flake/COMMIT_HASH
 # Install the latest version
 nix profile install github:conneroisu/kiro-flake
 
-# Or pin to a specific commit for reproducibility
-nix profile install github:conneroisu/kiro-flake/COMMIT_HASH
+# Or pin to a specific commit for reproducibility (use full 40-character commit hash)
+nix profile install github:conneroisu/kiro-flake/abc123def456...
 ```
 
 #### Add to NixOS configuration
@@ -91,13 +91,13 @@ In your home-manager configuration:
 
 For reproducible builds, it's recommended to pin to specific commits:
 
-1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full commit hash
+1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full 40-character commit hash (e.g., `abc123def456...`)
 
-2. **For flakes**: Use `github:conneroisu/kiro-flake/COMMIT_HASH`
+2. **For flakes**: Use `github:conneroisu/kiro-flake/FULL_COMMIT_HASH`
 
 3. **For traditional Nix with sha256**: Calculate the hash:
    ```bash
-   nix-prefetch-url --unpack https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz
+   nix-prefetch-url --unpack https://github.com/conneroisu/kiro-flake/archive/FULL_COMMIT_HASH.tar.gz
    ```
 
 ### Without Flakes (Traditional Nix)
@@ -110,8 +110,8 @@ If you don't have flakes enabled or prefer the traditional Nix approach:
 # Install directly from GitHub (latest)
 nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/main.tar.gz
 
-# Or pin to a specific commit for reproducibility
-nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz
+# Or pin to a specific commit for reproducibility (use full 40-character commit hash)
+nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/abc123def456.tar.gz
 ```
 
 #### Using nix-shell (temporary environment)
@@ -120,8 +120,8 @@ nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/
 # Enter a shell with kiro-desktop available (latest)
 nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/main.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 
-# Or pin to a specific commit for reproducibility
-nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
+# Or pin to a specific commit for reproducibility (use full 40-character commit hash)
+nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/abc123def456.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 ```
 
 #### Add to NixOS configuration (channels)
@@ -134,9 +134,9 @@ In your `/etc/nixos/configuration.nix`:
 let
   # Pin to a specific commit for reproducibility
   kiro-flake = import (builtins.fetchTarball {
-    url = "https://github.com/conneroisu/kiro-flake/archive/COMMIT_HASH.tar.gz";
-    # Add sha256 hash for integrity verification (get with: nix-prefetch-url --unpack <url>)
-    sha256 = "0000000000000000000000000000000000000000000000000000";
+    url = "https://github.com/conneroisu/kiro-flake/archive/FULL_COMMIT_HASH.tar.gz";
+    # Replace with actual sha256 hash (get with: nix-prefetch-url --unpack <url>)
+    sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   });
 in
 {
@@ -215,6 +215,8 @@ kiro /path/to/your/project
 ```
 
 ## Package Details
+
+> **Note**: Version and size information below reflects the current package. Check the [flake.nix](./flake.nix) file for the most up-to-date details.
 
 - **Version**: 0.5.0
 - **Size**: ~720MB extracted
