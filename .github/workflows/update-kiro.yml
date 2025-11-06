@@ -1,0 +1,149 @@
+name: Update Kiro Desktop
+
+on:
+  schedule:
+    # Run daily at midnight UTC
+    - cron: "0 0 * * *"
+  workflow_dispatch: # Allow manual triggers
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run update check
+        id: update
+        run: |
+          bash scripts/check-kiro-updates.sh
+        continue-on-error: true
+
+      - name: Check if update was made
+        id: check_changes
+        run: |
+          if git diff --quiet flake.nix; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in flake.nix"
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in flake.nix"
+          fi
+
+      - name: Create or update pull request
+        if: steps.check_changes.outputs.changes == 'true' && steps.update.outputs.updated == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NEW_VERSION="${{ steps.update.outputs.new_version }}"
+          CURRENT_VERSION="${{ steps.update.outputs.current_version }}"
+          NEW_URL="${{ steps.update.outputs.new_url }}"
+          BRANCH="automated-update/kiro-${NEW_VERSION}"
+
+          # Create or switch to branch
+          git checkout -B "$BRANCH"
+
+          # Stage changes
+          git add flake.nix
+
+          # Commit changes
+          git commit -m "Update Kiro Desktop to ${NEW_VERSION}
+
+          - Updated version from ${CURRENT_VERSION} to ${NEW_VERSION}
+          - Updated download URL
+          - Updated SHA256 hash
+          - Build verification passed
+
+          Automated update by GitHub Actions"
+
+          # Push branch
+          git push origin "$BRANCH" --force
+
+          # Create PR body
+          PR_BODY="## Automated Update
+
+          This PR updates Kiro Desktop from **${CURRENT_VERSION}** to **${NEW_VERSION}**.
+
+          ### Changes
+          - Version: \`${CURRENT_VERSION}\` → \`${NEW_VERSION}\`
+          - Download URL: ${NEW_URL}
+          - SHA256 hash automatically computed and verified
+          - Build verification: ✅ Passed
+
+          ### Verification Steps
+          - [x] Metadata fetched from official API
+          - [x] SHA256 hash computed with nix-prefetch-url
+          - [x] flake.nix syntax validated
+          - [x] Build test passed with \`nix build .#kiro-desktop\`
+
+          ### Manual Review Checklist
+          - [ ] Review the version change
+          - [ ] Verify the download URL is correct
+          - [ ] Test the package locally if desired: \`nix build .#kiro-desktop && ./result/bin/kiro --version\`
+
+          ---
+          🤖 This PR was automatically created by the [update-kiro workflow](.github/workflows/update-kiro.yml).
+          📅 Generated on $(date -u +"%Y-%m-%d %H:%M UTC")
+          "
+
+          # Check if PR already exists
+          if gh pr view "$BRANCH" &>/dev/null; then
+            echo "Updating existing PR..."
+            gh pr edit "$BRANCH" --body "$PR_BODY"
+          else
+            echo "Creating new PR..."
+            gh pr create \
+              --title "Update Kiro Desktop to ${NEW_VERSION}" \
+              --body "$PR_BODY" \
+              --base main \
+              --head "$BRANCH" \
+              --label "automated,dependencies"
+          fi
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build.log
+            *.backup
+          if-no-files-found: ignore
+          retention-days: 7
+
+  close-stale-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close stale update PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Find all automated update PRs older than 30 days
+          gh pr list \
+            --repo ${{ github.repository }} \
+            --label "automated" \
+            --state open \
+            --json number,createdAt,headRefName \
+            --jq '.[] | select(.headRefName | startswith("automated-update/kiro-")) | select((now - (.createdAt | fromdateiso8601)) > (30 * 86400)) | .number' \
+            | while read pr_number; do
+              echo "Closing stale PR #${pr_number}..."
+              gh pr close "$pr_number" \
+                --comment "Closing this automated update PR due to 30 days of inactivity. A new PR will be created on the next update check if needed." \
+                --delete-branch
+            done

@@ -75,13 +75,13 @@
       packages = {
         kiro-desktop = pkgs.stdenv.mkDerivation rec {
           pname = "kiro-desktop";
-          version = "0.5.0";
+          version = "0.5.9";
 
           # SHA256 hash calculated with nix-prefetch-url
-          # Hash: sha256-XUby2u/pMgSfYOG08ix3f64Tlc/5oMzh3eabRDRElBg=
+          # Hash: sha256-Xm7uRogux3bQMsWjdaamrHELnxNltRmjPLM8Mgt5+5Y=
           src = pkgs.fetchurl {
-            url = "https://prod.download.desktop.kiro.dev/releases/202510301715--distro-linux-x64-tar-gz/202510301715-distro-linux-x64.tar.gz";
-            hash = "sha256-XUby2u/pMgSfYOG08ix3f64Tlc/5oMzh3eabRDRElBg=";
+            url = "https://prod.download.desktop.kiro.dev/releases/202511032205--distro-linux-x64-tar-gz/202511032205-distro-linux-x64.tar.gz";
+            hash = "sha256-Xm7uRogux3bQMsWjdaamrHELnxNltRmjPLM8Mgt5+5Y=";
           };
 
           # Tarball extracts to Kiro/ directory
