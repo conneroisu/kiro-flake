@@ -18,20 +18,20 @@ If you have Nix flakes enabled (Nix 2.4+), you can use the modern flake commands
 
 ```bash
 # Run the latest version
-nix run github:conneroisu/kiro-flake
+nix run github:connerohnesorge/kiro-flake
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix run github:conneroisu/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
+nix run github:connerohnesorge/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
 ```
 
 #### Install to your profile
 
 ```bash
 # Install the latest version
-nix profile install github:conneroisu/kiro-flake
+nix profile install github:connerohnesorge/kiro-flake
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix profile install github:conneroisu/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
+nix profile install github:connerohnesorge/kiro-flake/a1b2c3d4e5f6789012345678901234567890abcd
 ```
 
 #### Add to NixOS configuration
@@ -42,7 +42,7 @@ In your `flake.nix`:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    kiro-flake.url = "github:conneroisu/kiro-flake";
+    kiro-flake.url = "github:connerohnesorge/kiro-flake";
   };
 
   outputs = { self, nixpkgs, kiro-flake, ... }: {
@@ -69,7 +69,7 @@ In your home-manager configuration:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    kiro-flake.url = "github:conneroisu/kiro-flake";
+    kiro-flake.url = "github:connerohnesorge/kiro-flake";
   };
 
   outputs = { nixpkgs, home-manager, kiro-flake, ... }: {
@@ -91,13 +91,13 @@ In your home-manager configuration:
 
 For reproducible builds, it's recommended to pin to specific commits:
 
-1. **Find a commit hash**: Visit [https://github.com/conneroisu/kiro-flake/commits/main](https://github.com/conneroisu/kiro-flake/commits/main) and copy the full 40-character commit hash (e.g., `a1b2c3d4e5f6789012345678901234567890abcd`)
+1. **Find a commit hash**: Visit [https://github.com/connerohnesorge/kiro-flake/commits/main](https://github.com/connerohnesorge/kiro-flake/commits/main) and copy the full 40-character commit hash (e.g., `a1b2c3d4e5f6789012345678901234567890abcd`)
 
-2. **For flakes**: Use `github:conneroisu/kiro-flake/FULL_COMMIT_HASH`
+2. **For flakes**: Use `github:connerohnesorge/kiro-flake/FULL_COMMIT_HASH`
 
 3. **For traditional Nix with sha256**: Calculate the hash:
    ```bash
-   nix-prefetch-url --unpack https://github.com/conneroisu/kiro-flake/archive/FULL_COMMIT_HASH.tar.gz
+   nix-prefetch-url --unpack https://github.com/connerohnesorge/kiro-flake/archive/FULL_COMMIT_HASH.tar.gz
    ```
 
 ### Without Flakes (Traditional Nix)
@@ -108,20 +108,20 @@ If you don't have flakes enabled or prefer the traditional Nix approach:
 
 ```bash
 # Install directly from GitHub (latest)
-nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/main.tar.gz
+nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/connerohnesorge/kiro-flake/archive/main.tar.gz
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz
+nix-env -iA packages.x86_64-linux.kiro-desktop -f https://github.com/connerohnesorge/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz
 ```
 
 #### Using nix-shell (temporary environment)
 
 ```bash
 # Enter a shell with kiro-desktop available (latest)
-nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/main.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
+nix-shell -p '(import (builtins.fetchTarball "https://github.com/connerohnesorge/kiro-flake/archive/main.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 
 # Or pin to a specific commit for reproducibility (use full 40-character commit hash)
-nix-shell -p '(import (builtins.fetchTarball "https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
+nix-shell -p '(import (builtins.fetchTarball "https://github.com/connerohnesorge/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz") {}).packages.x86_64-linux.kiro-desktop'
 ```
 
 #### Add to NixOS configuration (channels)
@@ -134,7 +134,7 @@ In your `/etc/nixos/configuration.nix`:
 let
   # Pin to a specific commit for reproducibility
   kiro-flake = import (builtins.fetchTarball {
-    url = "https://github.com/conneroisu/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz";
+    url = "https://github.com/connerohnesorge/kiro-flake/archive/a1b2c3d4e5f6789012345678901234567890abcd.tar.gz";
     # Replace with actual sha256 hash (get with: nix-prefetch-url --unpack <url>)
     sha256 = "sha256-AAAA...";  # Placeholder - replace with actual hash
   });
@@ -153,13 +153,13 @@ in
 Enter the development environment:
 
 ```bash
-nix develop github:conneroisu/kiro-flake
+nix develop github:connerohnesorge/kiro-flake
 ```
 
 Or for local development:
 
 ```bash
-git clone https://github.com/conneroisu/kiro-flake.git
+git clone https://github.com/connerohnesorge/kiro-flake.git
 cd kiro-flake
 nix develop
 ```
@@ -167,7 +167,7 @@ nix develop
 ### Without Flakes
 
 ```bash
-git clone https://github.com/conneroisu/kiro-flake.git
+git clone https://github.com/connerohnesorge/kiro-flake.git
 cd kiro-flake
 nix-shell
 ```
