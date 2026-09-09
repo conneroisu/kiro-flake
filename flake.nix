@@ -28,13 +28,13 @@
       # Platform-specific release URLs and hashes
       releaseConfig = {
         "x86_64-linux" = {
-          url = "https://prod.download.desktop.kiro.dev/releases/stable/linux-x64/signed/0.9.2/tar/kiro-ide-0.9.2-stable-linux-x64.tar.gz";
-          hash = "sha256-/dMABkSiselaWuLQOnxB4dCt0VnLMzKn2LkKMLSG9MM=";
+          url = "https://prod.download.desktop.kiro.dev/releases/stable/linux-x64/signed/1.0.437/tar/kiro-ide-1.0.437-stable-linux-x64.tar.gz";
+          hash = "sha256-Fh3/vQTqs1nPcIxGeXf38wSBSp7LvvqLxGg4aXJVrCQ=";
           platform = "linux";
           enabled = true;
         };
         "aarch64-darwin" = {
-          url = "https://prod.download.desktop.kiro.dev/releases/stable/darwin-arm64/signed/0.8.86/kiro-ide-0.8.86-stable-darwin-arm64.dmg";
+          url = "https://prod.download.desktop.kiro.dev/releases/stable/linux-x64/signed/1.0.437/tar/kiro-ide-1.0.437-stable-linux-x64.tar.gz";
           # Hash in base32 format from nix-prefetch-url (1.4GB DMG file)
           hash = "sha256:1jh4zl4rg4p3s997l1lfk0v1caj02ay9h7ny0avbrn0yp9pv8nhx";
           platform = "darwin";
@@ -95,7 +95,7 @@
       packages = if !isSupported then {} else {
         kiro-desktop = pkgs.stdenv.mkDerivation rec {
           pname = "kiro-desktop";
-          version = "0.9.2";
+          version = "1.0.437";
 
           # Platform-specific source
           src = pkgs.fetchurl {
